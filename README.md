@@ -16,6 +16,15 @@
 
 ![](docs/images/readme-main-image.png)
 
+> [!NOTE]
+> This is the `tongoclinh/glance` fork. It tracks
+> [`glanceapp/glance`](https://github.com/glanceapp/glance) as upstream and
+> carries a Vietnamese lunar-calendar customization for the built-in calendar.
+> The implementation lives in `internal/glance/static/js/lunar.js` and
+> `calendar.js`, with styling in `internal/glance/static/css/widget-calendar.css`.
+> Run `node internal/glance/static/js/_lunar.test.js` to verify the conversion
+> and notable-day rules.
+
 ## Features
 ### Various widgets
 * RSS feeds
