@@ -55,6 +55,11 @@
     color: var(--color-negative);
 }
 
+/* Keep notable spillover days red, but subordinate them to the active month. */
+.calendar-spillover-date.calendar-notable-date {
+    opacity: 0.55;
+}
+
 .calendar-header-button {
     position: relative;
     cursor: pointer;
