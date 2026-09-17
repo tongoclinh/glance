@@ -18,13 +18,24 @@
 }
 
 .calendar-date {
-    padding: 0.4rem 0;
+    padding: 0.3rem 0.45rem 1.1rem 0;
     color: var(--color-text-base);
     position: relative;
     border-radius: var(--border-radius);
     background: none;
     border: none;
     font: inherit;
+}
+
+/* Occupies the reserved bottom band of the cell so it never overlaps the
+   solar date, which happens on month-start labels like "1/8". */
+.calendar-lunar-date {
+    position: absolute;
+    right: 0.45rem;
+    bottom: 0.3rem;
+    font-size: 0.9rem;
+    line-height: 1;
+    color: var(--color-text-subdue);
 }
 
 .calendar-current-date {
@@ -35,6 +46,13 @@
 
 .calendar-spillover-date {
     color: var(--color-text-subdue);
+}
+
+/* Mùng 1 and ngày rằm: emphasize the solar and lunar date together. Declared
+   after the current/spillover rules so it wins at equal specificity. */
+.calendar-notable-date,
+.calendar-notable-date .calendar-lunar-date {
+    color: var(--color-negative);
 }
 
 .calendar-header-button {

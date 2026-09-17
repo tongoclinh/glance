@@ -1,5 +1,6 @@
 import { directions, easeOutQuint, slideFade } from "./animations.js";
 import { elem, repeat, text } from "./templating.js";
+import { lunarCellInfo } from "./lunar.js";
 
 const FULL_MONTH_SLOTS = 7*6;
 const WEEKDAY_ABBRS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -147,19 +148,19 @@ function Dates(firstDay) {
         }
 
         for (let i = 0; i < previousMonthSpilloverDays; i++, index++) {
-            children[index].classes("calendar-spillover-date").text(
-                previousMonthDays - previousMonthSpilloverDays + i + 1
-            )
+            children[index].classes("calendar-spillover-date");
+            setDate(children[index], newDate.getFullYear(), newDate.getMonth() - 1,
+                previousMonthDays - previousMonthSpilloverDays + i + 1);
         }
 
         for (let i = 1; i <= currentMonthDays; i++, index++) {
-            children[index]
-                .classesIf(isCurrentMonth && i === currentDate, "calendar-current-date")
-                .text(i);
+            children[index].classesIf(isCurrentMonth && i === currentDate, "calendar-current-date");
+            setDate(children[index], newDate.getFullYear(), newDate.getMonth(), i);
         }
 
         for (let i = 0; i < nextMonthSpilloverDays; i++, index++) {
-            children[index].classes("calendar-spillover-date").text(i + 1);
+            children[index].classes("calendar-spillover-date");
+            setDate(children[index], newDate.getFullYear(), newDate.getMonth() + 1, i + 1);
         }
 
         lastRenderedDate = newDate;
@@ -187,9 +188,25 @@ function Dates(firstDay) {
         ),
 
         dates = elem().classes("calendar-dates", "margin-top-3").append(
-            ...elem().classes("calendar-date").duplicate(FULL_MONTH_SLOTS)
+            ...elem().classes("calendar-date").append(
+                elem("span"),
+                elem("span").classes("calendar-lunar-date")
+            ).duplicate(FULL_MONTH_SLOTS)
         )
     ).component({ update });
+}
+
+// Writes the solar day and its Vietnamese lunar day into a calendar cell, and
+// flags mùng 1 / ngày rằm so both dates are emphasized. Out-of-range
+// month/day values are normalized by Date, so spill-over days from the
+// adjacent months resolve correctly.
+function setDate(cell, year, month, day) {
+    const date = new Date(year, month, day);
+    const lunar = lunarCellInfo(date);
+
+    cell.classesIf(lunar.notable, "calendar-notable-date");
+    cell.children[0].text(date.getDate());
+    cell.children[1].text(lunar.label);
 }
 
 function datesWithinSameMonth(d1, d2) {
